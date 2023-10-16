@@ -1,0 +1,17 @@
+{
+  "name": "nodejs_mongodb",
+  "version": "1.0.0",
+  "description": "NodeJS MongoDB Assignment",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "keywords": [
+    "NodeJS",
+    "MongoDB",
+    "Restful",
+    "API"
+  ],
+  "author": "Paige Knowles",
+  "license": "MIT"
+}
