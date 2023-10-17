@@ -65,10 +65,8 @@ const createCharacter = async (req, res, next) => {
     return character = await Characters.create({ id, name: req.body.name })
         .then((character) => {
             if (character) {
-                return res.status(409).json({
-                    error: {
-                        message: "Character already exists",
-                    },
+                return res.status(200).json({
+                    message: "Character created",
                 });
             } else {
                 const newCharacter = new Character({
