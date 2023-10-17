@@ -73,9 +73,9 @@ const createCharacter = async (req, res, next) => {
                     _id: mongoose.Types.ObjectId(),
                     name: req.character.name, 
                     gender: req.character.gender,
-                    aliases: req.character.aliases,
-                    playedBy: req.character.playedBy, 
-                    id: req.character.id,
+                    aliases: [req.character.aliases],
+                    playedBy: [req.character.playedBy], 
+                    // id: req.character.id,
                 });
 
                 newCharacter
@@ -87,8 +87,8 @@ const createCharacter = async (req, res, next) => {
                             name: {
                                 name: result.name, 
                                 gender: result.gender,
-                                aliases: result.aliases,
-                                playedBy: result.playedBy,
+                                aliases: [result.aliases],
+                                playedBy: [result.playedBy],
                                 id: result.id,    
                                 metadata: {
                                     method: req.method,
