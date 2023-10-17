@@ -4,7 +4,8 @@
   "description": "NodeJS MongoDB Assignment",
   "main": "server.js",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "start": "nodemon server"
   },
   "keywords": [
     "NodeJS",
@@ -13,5 +14,16 @@
     "API"
   ],
   "author": "Paige Knowles",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.5.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.6.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1"
+  }
 }
