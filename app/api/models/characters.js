@@ -20,8 +20,7 @@ const characterSchema = new mongoose.Schema({
         type: String,
         required: true,
         },
-    ],
-    _id: Number,
+    ]
 });
 
-module.exports = mongoose.model("Character", characterSchema);
+module.exports = mongoose.model("Characters", characterSchema);

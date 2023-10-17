@@ -7,7 +7,6 @@ const {
     updateCharacter, 
     deleteCharacter
 } = require("../controllers/characterController");
-const characters = require("../models/characters");
 
 router.get("/", getCharacter);
 

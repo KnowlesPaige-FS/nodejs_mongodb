@@ -61,8 +61,8 @@ const getCharacterById = async (req, res, next) => {
 };
 
 const createCharacter = async (req, res, next) => {
-    const { id } = req.body;
-    return character = await Characters.create({ id, name: req.body.name })
+    const { id } = req.body
+    return character = await Characters.create({ id, name:req.body.name })
         .then((character) => {
             if (character) {
                 return res.status(200).json({
@@ -75,7 +75,7 @@ const createCharacter = async (req, res, next) => {
                     gender: req.character.gender,
                     aliases: [req.character.aliases],
                     playedBy: [req.character.playedBy], 
-                    // id: req.character.id,
+                    // id: req.character._id,
                 });
 
                 newCharacter
@@ -89,7 +89,7 @@ const createCharacter = async (req, res, next) => {
                                 gender: result.gender,
                                 aliases: [result.aliases],
                                 playedBy: [result.playedBy],
-                                id: result.id,    
+                                id: result._id,    
                                 metadata: {
                                     method: req.method,
                                     host: req.hostname,
