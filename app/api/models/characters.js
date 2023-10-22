@@ -2,23 +2,41 @@ const mongoose = require("mongoose");
 
 const characterSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
+    url: {
+        type: String,
+        unique: true
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: "Url",
+    },
     name: {
+        type: String,
+    },
+    gender: {
         type: String,
         required: true,
     },
-    gender: {
+    culture: {
         type: String,
     },
     aliases: [
         {
         type: String,
-        required: true,
-         },
+        },
+    ],
+    books: [
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Books",
+        }
+    ],
+    povBooks: [
+        {
+            type: String,
+        }
     ],
     playedBy: [
         {
-        type: String,
-        required: true,
+            type: String,
         },
     ]
 });

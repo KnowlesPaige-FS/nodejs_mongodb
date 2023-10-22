@@ -3,6 +3,7 @@ const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const characterRouter = require("../app/api/routes/characterRouter");
+const booksRouter = require("../app/api/routes/booksRouter");
 
 
 // middleware for logging
@@ -38,7 +39,7 @@ app.get("/", (req, res, next) => {
 
 // router middleware
 app.use("/characters", characterRouter);
-
+app.use("/books", booksRouter);
 
 // app middleware to handle errors and bad url paths
 app.use((req, res, next) => {

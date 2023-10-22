@@ -1,11 +1,14 @@
-const PlayedBy = require("../models/playedBy");
+const mongoose = require("mongoose");
+const Books = require("../models/books");
+const Messages = require("../messages/messages");
 
-const getActor = async (req, res, next) => {
-    PlayedBy.find()
-    .then((actor) => {
+
+const getBook = async (req, res, next) => {
+    Books.find()
+    .then((book) => {
         res.status(200).json({
-            message: "All Books Retrieved",
-            name: book.map((actor) => {
+            message: Messages.allBooks,
+            name: book.map((book) => {
                 return {
                     book: {
                         title: book.name,
@@ -33,18 +36,16 @@ const getActor = async (req, res, next) => {
 const getBookById = async (req, res, next) => {
     const { id } = req.params;
     return book = await Books.findById(id)
-    // .select("book _id")
-    // .populate("characters", "name book")
     .exec()
     .then((book) => {    
         if(!book) {
             return res.status(404).json({
-                message: "BOOK NOT FOUND"
+                message: Messages.BookNotFound,
             });
         } else {
         res.status(200).json({
             status: "success",
-            message: `${req.method} - Book Retrieved By Id`,
+            message: Messages.BookRetrieved,
             book: {
                 title: book.name,
                     authors: book.authors,
@@ -69,17 +70,23 @@ const getBookById = async (req, res, next) => {
 
 const createBook = async (req, res, next) => {
         const { id } = req.body
-        return book = await Books.findOne({
+        // return character = await Characters.find(id, req.body, {
+        //     new: true,
+        // })
+        return book = await Books.findOne(
             id,
-            name: req.body.name, 
-        })
+            req.body.title,
+        {   
+            new: true,
+        }
+        )
         .exec()
         .then(book => {
             if(book) {
                 return res.status(406).json({
-                   error: {
-                        message: "Book already exists",
-                   },
+                    error: {
+                        message: Messages.BookExists,
+                    },
                 });
             } else {
                 const newBook = new Book({
@@ -99,7 +106,7 @@ const createBook = async (req, res, next) => {
                     .then((result) => {
                         console.log(result);
                         res.status(200).json({
-                            message: "Book saved",
+                            message: Messages.BookSaved,
                             name: {
                                 book: {
                                     title: result.book.name,
@@ -142,7 +149,7 @@ const updateBook = async (req, res, next) => {
     .then((book) => {
         res.status(200).json({
             status: "success",
-            message: `${req.method} - Book Updated`,
+            message: Messages.updatedBook,
             book: {
                 book: {
                     title: book.name,
@@ -172,7 +179,7 @@ const deleteBook = async (req, res, next) => {
     .exec()
     .then(() => {
         res.status(200).json({
-            message: "Book Deleted",
+            message: Messages.BookDeleted,
             request: {
                 method: "DELETE",
                 url: "http://localhost:40001/books/" + id,

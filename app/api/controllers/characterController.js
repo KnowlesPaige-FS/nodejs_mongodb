@@ -1,24 +1,26 @@
+const mongoose = require("mongoose");
 const Characters = require("../models/characters");
+const Messages = require("../messages/messages");
 
 const getCharacter = async (req, res, next) => {
     Characters.find()
     .then((character) => {
         res.status(200).json({
-            message: "All Characters Retrieved",
+            message: Messages.allCharacters,
             name: character.map((character) => {
                 return {
-                name: character.name, 
-                gender: character.gender,
-                aliases: character.aliases,
-                playedBy: character.playedBy,
-                id: character._id,    
+                    url: character.url,
+                    name: character.name, 
+                    gender: character.gender,
+                    culture: character.culture,
+                    aliases: character.aliases,
+                    books: character.books,
+                    povBooks: character.povBooks,
+                    playedBy: character.playedBy,
+                    id: character._id,    
                 };
             }),
-            metadata: {
-                host: req.hostname,
-                method: req.method,
-                },
-        });
+        })
     })
     .catch((err) => {
         console.error(err.message);
@@ -33,22 +35,31 @@ const getCharacter = async (req, res, next) => {
 const getCharacterById = async (req, res, next) => {
     const { id } = req.params;
     return character = await Characters.findById(id)
+    // .select()
+    // .populate("books", "characters name")
+    .exec()
     .then((character) => {
+        if(!character) {
+            return res.status(404).json({
+                message: "Character NOT FOUND"
+            });
+        } else {
         res.status(200).json({
             status: "success",
-            message: `${req.method} - Characters Retrieved By Id`,
+            message: Messages.CharacterFetched,
             name: {
+                url: character.url,
                 name: character.name,
                 gender: character.gender,
+                culture: character.culture,
                 aliases: character.aliases,
+                books: character.books,
+                povBooks: character.povBooks,
                 playedBy: character.playedBy,
                 id: character._id,       
             },
-            metadata: {
-                host: req.hostname,
-                method: req.method,
-            },
-        });
+        })
+        }
     })
     .catch((err) => {
         console.error(err.message);
@@ -61,47 +72,58 @@ const getCharacterById = async (req, res, next) => {
 };
 
 const createCharacter = async (req, res, next) => {
-    const { id } = req.body
-    return character = await Characters.create({ id, name:req.body.name })
+        const { id } = req.body
+        return character = await Characters.findOne({
+            id,
+            name: req.body.name, 
+        })
+        .exec()
         .then((character) => {
-            if (character) {
-                return res.status(200).json({
-                    message: "Character created",
+            if(character) {
+                return res.status(406).json({
+                    error: {
+                        message: Messages.CharacterExists,
+                    },
                 });
             } else {
-                const newCharacter = new Character({
-                    _id: mongoose.Types.ObjectId(),
-                    name: req.character.name, 
-                    gender: req.character.gender,
-                    aliases: [req.character.aliases],
-                    playedBy: [req.character.playedBy], 
-                    // id: req.character._id,
+                const newCharacters = new Characters({
+                    name: {
+                        _id: new mongoose.Types.ObjectId(),
+                        url: req.character.url,
+                        name: req.character.name, 
+                        gender: req.character.gender,
+                        culture: req.character.culture,
+                        aliases: req.character.aliases,
+                        books: req.character.books,
+                        povBooks: req.character.povBooks,
+                        playedBy: req.character.playedBy, 
+                    }
                 });
-
-                newCharacter
+                
+                newCharacters
                     .save()
                     .then((result) => {
                         console.log(result);
                         res.status(200).json({
-                            message: "Character saved",
+                            message: Messages.CharacterSaved,
                             name: {
+                                url: result.url,
                                 name: result.name, 
                                 gender: result.gender,
-                                aliases: [result.aliases],
-                                playedBy: [result.playedBy],
+                                culture: result.character.culture,
+                                aliases: result.character.aliases,
+                                books: result.character.books,
+                                povBooks: result.character.povBooks,
+                                playedBy: result.playedBy,
                                 id: result._id,    
-                                metadata: {
-                                    method: req.method,
-                                    host: req.hostname,
-                                },
-                            },
-                        });
+                            }
+                        })
                     })
                     .catch((err) => {
                         console.error(err.message);
                         res.status(500).json({
                             error: {
-                                message: err.message,
+                                message: "Unable to save the character with name: " + req.body.name,
                             },
                         });
                     });
@@ -126,19 +148,19 @@ const updateCharacter = async (req, res, next) => {
     .then((character) => {
         res.status(200).json({
             status: "success",
-            message: `${req.method} - GOT Character Updated`,
+            message: Messages.updatedCharacter,
             name: {
+                url: character.url,
                 name: character.name,
                 gender: character.gender,
+                culture: character.culture,
                 aliases: character.aliases,
+                books: character.books,
+                povBooks: character.povBooks,
                 playedBy: character.playedBy,
                 id: character._id,       
             },
-            metadata: {
-                host: req.hostname,
-                method: req.method,
-            },
-        });
+        })
     })
     .catch((err) => {
         console.error(err.message);
@@ -153,21 +175,14 @@ const updateCharacter = async (req, res, next) => {
 const deleteCharacter = async (req, res, next) => {
     const { id } = req.params;
     return character = await Characters.findByIdAndDelete(id)
-    .then((character) => {
+    .exec()
+    .then(() => {
         res.status(200).json({
-            status: "success",
-            message: `${req.method} - GOT Character Deleted`,
-            name: {
-                name: character.name,
-                gender: character.gender,
-                aliases: character.aliases,
-                playedBy: character.playedBy,
-                id: character._id,       
-            },
-            metadata: {
-                host: req.hostname,
-                method: req.method,
-            },
+            message: Messages.CharacterDeleted,
+            request: {
+                method: "DELETE",
+                url: "http://localhost:40001/characters/" + id,
+            }
         });
     })
     .catch((err) => {

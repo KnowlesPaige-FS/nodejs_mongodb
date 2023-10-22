@@ -1,15 +1,16 @@
 const mongoose = require("mongoose");
 
-const actorSchema = mongoose.Schema({
+const playedBySchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    title: {
+    name: {
         type: String,
         required: true,
     },
-    desc: {
+    playedBy: [
+        {
         type: String,
-        required: true,
-    },
+        },
+    ]
 });
 
-module.exports = mongoose.model("playedBy", actorSchema);
+module.exports = mongoose.model("PlayedBy", playedBySchema);
