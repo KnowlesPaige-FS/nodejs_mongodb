@@ -23,8 +23,9 @@ const characterSchema = new mongoose.Schema({
     ],
     books: [
         {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Books",
+            type: String,
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: "Books",
         }
     ],
     povBooks: [

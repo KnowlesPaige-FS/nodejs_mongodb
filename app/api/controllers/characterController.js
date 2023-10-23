@@ -75,12 +75,12 @@ const createCharacter = async (req, res, next) => {
         const { id } = req.body
         return character = await Characters.findOne(
             id,
-            // name: req.body, 
+            req.body.name, 
             {   
                 new: true,
             }
         )
-        // .exec()
+        .exec()
         .then((character) => {
             if(character) {
                 return res.status(406).json({
@@ -184,14 +184,20 @@ const deleteCharacter = async (req, res, next) => {
     const { id } = req.params;
     return character = await Characters.findByIdAndDelete(id)
     .exec()
-    .then(() => {
-        res.status(200).json({
-            message: Messages.CharacterDeleted,
-            request: {
-                method: "DELETE",
-                url: "http://localhost:40001/characters/" + id,
-            }
-        });
+    .then((character) => {
+        if(!character) {
+            return res.status(404).json({
+                message: Messages.CharacterNotFound,
+            });
+        } else {
+            res.status(200).json({
+                message: Messages.CharacterDeleted,
+                request: {
+                    method: "DELETE",
+                    url: "http://localhost:40001/characters/" + id,
+                }
+            });
+        }
     })
     .catch((err) => {
         console.error(err.message);

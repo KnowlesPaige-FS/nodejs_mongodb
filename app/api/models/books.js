@@ -21,8 +21,9 @@ const bookSchema = new mongoose.Schema({
     },
     characters: [
         {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Characters",
+        type: String,
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: "Characters",
         }
     ],
 });
