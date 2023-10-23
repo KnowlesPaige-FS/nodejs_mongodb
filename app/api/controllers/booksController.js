@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 const Books = require("../models/books");
 const Messages = require("../messages/messages");
 
@@ -36,6 +36,8 @@ const getBook = async (req, res, next) => {
 const getBookById = async (req, res, next) => {
     const { id } = req.params;
     return book = await Books.findById(id)
+    .select("_id name authors publisher released characters")
+    .populate("characters")
     .exec()
     .then((book) => {    
         if(!book) {
@@ -70,9 +72,6 @@ const getBookById = async (req, res, next) => {
 
 const createBook = async (req, res, next) => {
         const { id } = req.body
-        // return character = await Characters.find(id, req.body, {
-        //     new: true,
-        // })
         return book = await Books.findOne(
             id,
             req.body.title,

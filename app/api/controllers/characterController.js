@@ -35,8 +35,8 @@ const getCharacter = async (req, res, next) => {
 const getCharacterById = async (req, res, next) => {
     const { id } = req.params;
     return character = await Characters.findById(id)
-    // .select()
-    // .populate("books", "characters name")
+    .select()
+    .populate("books")
     .exec()
     .then((character) => {
         if(!character) {
@@ -73,11 +73,14 @@ const getCharacterById = async (req, res, next) => {
 
 const createCharacter = async (req, res, next) => {
         const { id } = req.body
-        return character = await Characters.findOne({
+        return character = await Characters.findOne(
             id,
-            name: req.body.name, 
-        })
-        .exec()
+            // name: req.body, 
+            {   
+                new: true,
+            }
+        )
+        // .exec()
         .then((character) => {
             if(character) {
                 return res.status(406).json({
@@ -87,7 +90,6 @@ const createCharacter = async (req, res, next) => {
                 });
             } else {
                 const newCharacters = new Characters({
-                    name: {
                         _id: new mongoose.Types.ObjectId(),
                         url: req.character.url,
                         name: req.character.name, 
@@ -97,12 +99,11 @@ const createCharacter = async (req, res, next) => {
                         books: req.character.books,
                         povBooks: req.character.povBooks,
                         playedBy: req.character.playedBy, 
-                    }
                 });
                 
                 newCharacters
-                    .save()
-                    .then((result) => {
+                    .save((result) => {
+                    // .then((result) => {
                         console.log(result);
                         res.status(200).json({
                             message: Messages.CharacterSaved,
@@ -145,22 +146,29 @@ const updateCharacter = async (req, res, next) => {
         new: true,
         runValidators: true,
     })
+
     .then((character) => {
-        res.status(200).json({
-            status: "success",
-            message: Messages.updatedCharacter,
-            name: {
-                url: character.url,
-                name: character.name,
-                gender: character.gender,
-                culture: character.culture,
-                aliases: character.aliases,
-                books: character.books,
-                povBooks: character.povBooks,
-                playedBy: character.playedBy,
-                id: character._id,       
-            },
-        })
+        if(!character) {
+            return res.status(404).json({
+                message: Messages.CharacterNotFound,
+            });
+        } else {
+            res.status(200).json({
+                status: "success",
+                message: Messages.updatedCharacter,
+                name: {
+                    url: character.url,
+                    name: character.name,
+                    gender: character.gender,
+                    culture: character.culture,
+                    aliases: character.aliases,
+                    books: character.books,
+                    povBooks: character.povBooks,
+                    playedBy: character.playedBy,
+                    id: character._id,       
+                },
+            })
+        }
     })
     .catch((err) => {
         console.error(err.message);

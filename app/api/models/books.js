@@ -23,8 +23,6 @@ const bookSchema = new mongoose.Schema({
         {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Characters",
-        // type: String,
-        // required: true,
         }
     ],
 });

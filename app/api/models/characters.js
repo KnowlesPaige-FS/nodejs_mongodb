@@ -5,8 +5,6 @@ const characterSchema = new mongoose.Schema({
     url: {
         type: String,
         unique: true
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: "Url",
     },
     name: {
         type: String,
