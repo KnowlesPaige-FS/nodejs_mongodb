@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const characterRouter = require("../app/api/routes/characterRouter");
-const booksRouter = require("../app/api/routes/booksRouter");
+const characterRouter = require("./api/routes/characterRouter");
+const booksRouter = require("./api/routes/booksRouter");
 
 
 // middleware for logging
